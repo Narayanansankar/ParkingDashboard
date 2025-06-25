@@ -1,0 +1,10 @@
+# Secrets
+credentials.json
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+.venv/
