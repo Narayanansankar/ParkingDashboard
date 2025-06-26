@@ -14,103 +14,67 @@
         <!-- HEADER -->
         <header class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom mx-3">
             <div>
-                <h1 class="mb-0 lang-en">Parking Availability Dashboard</h1>
-                <h1 class="mb-0 lang-ta" style="display:none;">வாகன நிறுத்துமிட மேலோட்டம்</h1>
-                <p class="text-muted mb-0">
-                    <span class="lang-en">Last Updated: <span id="last-updated"></span></span>
-                    <span class="lang-ta" style="display:none;">கடைசியாக புதுப்பிக்கப்பட்டது: <span id="last-updated-ta"></span></span>
-                </p>
-            </div>
-            <div class="form-check form-switch fs-5">
-                <input class="form-check-input" type="checkbox" role="switch" id="language-toggle">
-                <label class="form-check-label" for="language-toggle">தமிழ் / English</label>
+                <h1 class="mb-0">Parking Availability Dashboard</h1>
+                <p class="text-muted mb-0">Last Updated: <span id="last-updated"></span></p>
             </div>
         </header>
-<!-- OVERALL SUMMARY SECTION -->
-    <div class="summary-section card p-3 mb-4 mx-3">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h3 class="lang-en">System-Wide Status</h3>
-                <h3 class="lang-ta" style="display:none;">ஒட்டுமொத்த நிலவரம்</h3>
-                <div class="progress mt-3" style="height: 30px;">
-                    <div id="overall-progress-bar" class="progress-bar fw-bold fs-6" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+
+        <!-- OVERALL SUMMARY SECTION -->
+        <div class="summary-section card p-3 mb-4 mx-3">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                    <h3>System-Wide Status</h3>
+                    <div class="progress mt-3" style="height: 30px;">
+                        <div id="overall-progress-bar" class="progress-bar fw-bold fs-6" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
+                    <p class="mt-2 text-muted fw-bold fs-5 text-center">Total Occupied: <span id="total-vehicles">0</span> / <span id="total-capacity">0</span></p>
                 </div>
-                <p class="mt-2 text-muted fw-bold fs-5 text-center">
-                    <span class="lang-en">Total Occupied: <span id="total-vehicles">0</span> / <span id="total-capacity">0</span></span>
-                    <span class="lang-ta" style="display:none;">மொத்தம் நிரம்பியது: <span id="total-vehicles-ta">0</span> / <span id="total-capacity-ta">0</span></span>
-                </p>
             </div>
-            <div class="col-md-4 d-flex justify-content-end">
-                <a href="/map" target="_blank" class="btn btn-primary btn-lg">
-                    <span class="lang-en">View All on Map</span>
-                    <span class="lang-ta" style="display:none;">அனைத்தையும் வரைபடத்தில் காண்க</span>
-                </a>
+        </div>
+
+        <!-- OVERALL HISTORY CHART -->
+        <div class="card p-3 mb-5 mx-3">
+            <h3>Route-wise Vehicle Count (Last 24 Hours)</h3>
+            <div class="chart-container">
+                <canvas id="overallHistoryChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Parking Lot Sections -->
+        <div class="row g-4 mx-2">
+            <div class="col-lg-5">
+                 <h2 class="route-column-title">Thoothukudi Route</h2>
+                 <div id="thoothukudi-lots-container" class="row g-4"></div>
+            </div>
+            <div class="col-lg-5">
+                 <h2 class="route-column-title">Tirunelveli Route</h2>
+                 <div id="tirunelveli-lots-container" class="row g-4"></div>
+            </div>
+            <div class="col-lg-2">
+                <h2 class="route-column-title">Nagercoil Route</h2>
+                <div id="nagercoil-lots-container" class="row g-4"></div>
             </div>
         </div>
     </div>
 
-    <!-- OVERALL HISTORY CHART (DEFAULT) -->
-    <div class="card p-3 mb-5 mx-3">
-        <h3 class="lang-en">Route-wise Vehicle Count (Last 24 Hours)</h3>
-        <h3 class="lang-ta" style="display:none;">வழித்தடம் வாரியான வாகன எண்ணிக்கை (கடந்த 24 மணிநேரம்)</h3>
-        <div class="chart-container">
-            <canvas id="overallHistoryChart"></canvas>
-        </div>
-    </div>
-
-    <!-- --- THIS IS THE KEY CHANGE --- -->
-    <!-- A single row to contain all the route sections with a 5+5+2=12 layout -->
-    <div class="row g-4 mx-2">
-        
-        <!-- Thoothukudi Section - Takes up 5/12 of the space -->
-        <div class="col-lg-5">
-             <h2 class="route-column-title lang-en">Thoothukudi Route</h2>
-             <h2 class="route-column-title lang-ta" style="display:none;">தூத்துக்குடி வழித்தடம்</h2>
-             <div id="thoothukudi-lots-container" class="row g-4">
-                 <!-- Thoothukudi cards will be inserted here -->
-             </div>
-        </div>
-
-        <!-- Tirunelveli Section - Takes up 5/12 of the space -->
-        <div class="col-lg-5">
-             <h2 class="route-column-title lang-en">Tirunelveli Route</h2>
-             <h2 class="route-column-title lang-ta" style="display:none;">திருநெல்வேலி வழித்தடம்</h2>
-             <div id="tirunelveli-lots-container" class="row g-4">
-                 <!-- Tirunelveli cards will be inserted here -->
-             </div>
-        </div>
-        
-        <!-- Nagercoil Section - Takes up 2/12 of the space -->
-        <div class="col-lg-2">
-            <h2 class="route-column-title lang-en">Nagercoil Route</h2>
-            <h2 class="route-column-title lang-ta" style="display:none;">நாகர்கோவில் வழித்தடம்</h2>
-            <div id="nagercoil-lots-container" class="row g-4">
-                <!-- Nagercoil cards will be inserted here -->
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<!-- MODAL FOR SINGLE PARKING LOT HISTORY -->
-<div class="modal fade" id="lotHistoryModal" tabindex="-1" aria-labelledby="lotHistoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="lotHistoryModalLabel">Parking Lot History</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p class="text-muted text-center" id="modal-loading-text">Loading chart...</p>
-        <div style="height: 400px;">
-            <canvas id="singleLotChart"></canvas>
+    <!-- MODAL FOR SINGLE PARKING LOT HISTORY -->
+    <div class="modal fade" id="lotHistoryModal" tabindex="-1" aria-labelledby="lotHistoryModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="lotHistoryModalLabel">Parking Lot History</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted text-center" id="modal-loading-text">Loading chart...</p>
+            <div style="height: 400px;"><canvas id="singleLotChart"></canvas></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- JavaScript libraries -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
