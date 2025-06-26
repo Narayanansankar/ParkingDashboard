@@ -44,7 +44,6 @@ def get_parking_data():
                 'Route_en': ROUTE_MAP.get(str(row.get('Route', '')).strip().upper(), 'Other'),
             }
             
-            # Special handling for Two Wheeler capacity
             if cleaned_id == 'p015':
                 try: total_capacity = int(row.get('2 Wheeler capacity', 0))
                 except (ValueError, TypeError): total_capacity = 0
@@ -57,9 +56,7 @@ def get_parking_data():
             
             processed_lot['TotalCapacity'] = total_capacity
             processed_lot['Current_Vehicle'] = current_vehicles
-
-            is_available_val = str(row.get('Available/closed', 'AVAILABLE')).strip().upper()
-            processed_lot['IsParkingAvailable'] = is_available_val == 'AVAILABLE'
+            processed_lot['IsParkingAvailable'] = str(row.get('Available/closed', 'AVAILABLE')).strip().upper() == 'AVAILABLE'
 
             if total_capacity > 0:
                 processed_lot['Occupancy_Percent'] = (current_vehicles / total_capacity) * 100
@@ -72,38 +69,32 @@ def get_parking_data():
         print(f"Error fetching/processing live data: {e}")
         return {}
 
-
 # --- Flask Routes (API Endpoints) ---
-
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# CORRECTED API DATA FUNCTION
 @app.route('/api/parking-data')
 def api_data():
     all_lots = get_parking_data()
     
-    # Separate lots for routes and special cases
     route_lots = []
     special_lots = {}
 
     for lot_id, lot_data in all_lots.items():
         if lot_id == 'p015':
             special_lots['two_wheeler'] = lot_data
-        # Ensure we only include lots meant for the main dashboard display
         elif lot_data.get('Route_en') in ['Thoothukudi', 'Tirunelveli', 'Nagercoil']:
             route_lots.append(lot_data)
 
     response = {
         "last_updated": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "route_lots": route_lots, # This key is used by the JS to render cards
-        "special_lots": special_lots # This key is used by the JS for the two-wheeler box
+        "route_lots": route_lots,
+        "special_lots": special_lots
     }
     return jsonify(response)
 
 
-# The rest of the routes are unchanged but included for completeness
 @app.route('/api/overall-history')
 def overall_history():
     if not history_sheet: return jsonify({"error": "History data source not available"}), 500
