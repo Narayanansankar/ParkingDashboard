@@ -12,8 +12,8 @@ try:
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
     client = gspread.authorize(creds)
-    live_sheet = client.open("Tiruchendur_Parking_Lots_Info").worksheet("Sheet1")
-    history_sheet = client.open("Tiruchendur_Parking_Lots_Info").worksheet("History")
+    live_sheet = client.open("Tiruchendur_Parking_Lots_Info").worksheet("Sheet3")
+    history_sheet = client.open("Tiruchendur_Parking_Lots_Info").worksheet("History1")
     print("Successfully connected to Google Sheets.")
 except Exception as e:
     print(f"Error connecting to Google Sheets: {e}")
